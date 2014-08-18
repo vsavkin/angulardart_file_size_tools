@@ -6,3 +6,6 @@ pub install
 
 cd ../../app
 pub install
+
+cd ../analyzer
+pub install
