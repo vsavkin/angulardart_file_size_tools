@@ -1,0 +1,6 @@
+name: sample_app
+dependencies:
+  angular: ">= 0.13.0"
+
+transformers:
+- angular
