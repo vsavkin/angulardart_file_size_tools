@@ -118,9 +118,7 @@ all         dead        percent
 
 ## Notes
 
-* With tracing enabled the file size will increase significantly. So if care about about the size, and not the number of methods, disable tracing and use `dumpinfo.sh`.
-
-
+* With tracing enabled the file size will increase significantly. If you want to be precise about the size, disable tracing and use `dumpinfo.sh`.
 
 
 
