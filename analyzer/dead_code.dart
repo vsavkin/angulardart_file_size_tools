@@ -5,11 +5,11 @@ library dead_code;
 Running the file will print:
 
 ---------------- number of methods ----------------
-all         dead        percent
+all         dead        %
 5034        4467        89
 
 ----------------------- size ----------------------
-all         dead        percent
+all         dead        %
 2097229     1543402     74
 
 
@@ -28,12 +28,12 @@ main() {
 
 void printDeadCode(Map m) {
   print("---------------- number of methods ----------------");
-  printRow(["all", "dead", "percent"], [12, 12, 5]);
+  printRow(["all", "dead", "%"], [12, 12, 5]);
   printRow([m["allLength"], m["deadLength"], m["percentLength"]], [12, 12, 5]);
 
   print("");
   print("----------------------- size ----------------------");
-  printRow(["all", "dead", "percent"], [12, 12, 5]);
+  printRow(["all", "dead", "%"], [12, 12, 5]);
   printRow([m["allSize"], m["deadSize"], m["percentSize"]], [12, 12, 5]);
 }
 

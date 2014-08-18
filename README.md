@@ -44,7 +44,7 @@ The analyzer directory contains a bunch of Dart scripts that run some analysis u
 
 ```
 ----- libs grouped by category ------
-Group       Libs   Bytes     Percent
+Group       Libs   Bytes     %
 --------------------------------------
 totals      89     546835    (100%)
 angular     38     208429    (38%)
@@ -56,7 +56,7 @@ route       2      10844     (2%)
 app         1      507       (0%)
 
 ---------------------- libs angular -------------------------
-Lib                                     Size      Percent
+Lib                                     Size      %
 ----------------------------------------------------------
 totals                                  208429    100 (38%)
 angular.core.dom_internal               53697     26 (10%)
@@ -75,7 +75,7 @@ angular.util                            3999      2 (1%)
 
 
 ---------------------- libs dart -------------------------
-Lib                                     Size      Percent
+Lib                                     Size      %
 ----------------------------------------------------------
 totals                                  176844    100 (32%)
 dart.dom.html                           45311     26 (8%)
@@ -96,7 +96,7 @@ dart.math                               646       0 (0%)
 
 ```
 ----------------------- scaffolding -----------------------
-file           libs' size     scaffolding    percent
+file           libs' size     scaffolding    %
 -----------------------------------------------------------
 789508         546835         61035          11
 ```
@@ -107,11 +107,11 @@ file           libs' size     scaffolding    percent
 
 ```
 ---------------- number of methods ----------------
-all         dead        percent
+all         dead        %
 5034        4467        89
 
 ----------------------- size ----------------------
-all         dead        percent
+all         dead        %
 2097229     1543402     74
 ```
 

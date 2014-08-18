@@ -5,7 +5,7 @@ library size_by_library_group;
 Running this script will print the following table:
 
 ----- libs grouped by category ------
-Group       Libs   Bytes     Percent
+Group       Libs   Bytes     %
 --------------------------------------
 totals      89     2415847   (100%)
 angular     38     951777    (39%)
@@ -19,10 +19,10 @@ app         1      2891      (0%)
 You can see that angular (+ di, route) accounts for 45% of the generated file. The dart core accounts for another 32%.
 "other" mostly consists of _js_helper, _isolate_helper, _interceptors, so it cannot be made smaller.
 
-The script will also print detailed info about angular and core libs:
+The script will also print detailed info about the angular and core libs:
 
  ---------------------- libs angular -------------------------
-Lib                                     Size      Percent
+Lib                                     Size      %
 ----------------------------------------------------------
 totals                                  951777    100 (39%)
 angular.core.dom_internal               258957    27 (11%)
@@ -54,7 +54,7 @@ void printGroups(Map info) {
   pr(val) => printRow([val["group"], val["libsLength"], val["size"], "(${val["percent"]}%)"],  [12, 7, 10, 7]);
 
   print("----- libs grouped by category ------");
-  printRow(["Group", "Libs", "Bytes", "Percent"],  [12, 7, 10, 7]);
+  printRow(["Group", "Libs", "Bytes", "%"],  [12, 7, 10, 7]);
   print('--------------------------------------');
   pr(totals);
   groups.forEach(pr);
@@ -106,7 +106,7 @@ void printLibs(Map info) {
 
   print("");
   print("---------------------- libs ${info["group"]} -------------------------");
-  printRow(["Lib", "Size", "Percent"],  [40, 10, 12]);
+  printRow(["Lib", "Size", "%"],  [40, 10, 12]);
   print('----------------------------------------------------------');
   pr(totals);
   libs.forEach(pr);

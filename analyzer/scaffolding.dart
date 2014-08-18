@@ -5,7 +5,7 @@ library scaffolding;
 Running this script will print:
 
 ----------------------- scaffolding -----------------------
-file           libs' size     scaffolding    percent
+file           libs' size     scaffolding    %
 -----------------------------------------------------------
 2838391        2415847        189468         8
 
@@ -37,7 +37,7 @@ Map scaffoldingInfo(Dump a) {
 
 void printScaffoldingInfo(Map m) {
   print("----------------------- scaffolding -----------------------");
-  printRow(["file", "libs' size", "scaffolding", 'percent'], [15, 15, 15, 5]);
+  printRow(["file", "libs' size", "scaffolding", '%'], [15, 15, 15, 5]);
   print("-----------------------------------------------------------");
   printRow([m["file"], m["libs"], m["scaffolding"], m["percent"]], [15, 15, 15, 5]);
 }
