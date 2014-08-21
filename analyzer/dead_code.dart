@@ -20,7 +20,7 @@ import 'common.dart';
 import 'package:fp/fp.dart' as _;
 
 main() {
-  final d = deadCode(new Dump("../app/build/web/sample_app.dart.js.info.json"),
+  final d = deadCode(new Dump("../dumps/dump.json"),
       new Tracing("../chrome_logs/chrome_debug.log"));
 
   printDeadCode(d);

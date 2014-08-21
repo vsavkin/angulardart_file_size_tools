@@ -32,9 +32,9 @@ Run ./scripts/tracing.sh to generate:
 
 ## Analyzing the Results
 
-You can analyze `sample_app.dart.js.info.json` using http://dart-lang.github.io/dump-info-visualizer/build/web/viewer.html
+You can analyze `dumps/dump.json` using http://dart-lang.github.io/dump-info-visualizer/build/web/viewer.html
 
-The analyzer directory contains a bunch of Dart scripts that run some analysis using  `app/build/web/sample_app.dart.js.info.json` and `chrome_logs/chrome_debug.log`. Run `tracing.sh` before running the scripts.
+The analyzer directory contains a bunch of Dart scripts that run some analysis using  `dumps/dump.json` and `chrome_logs/chrome_debug.log`. Run `tracing.sh` before running the scripts.
 
 
 
@@ -115,6 +115,16 @@ all         dead        %
 2097229     1543402     74
 ```
 
+## Changing App
+
+You can profile any app, not just "sample_app". To do that set the APP_DIR and FILE env variables.
+
+```
+APP_DIR=/myapp FILE=main_file.dart ./scripts/tracing.sh
+APP_DIR=/myapp FILE=main_file.dart ./scripts/dumpinfo.sh
+```
+
+You don't have to change any of the dart scripts.
 
 ## Notes
 

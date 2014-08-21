@@ -40,7 +40,7 @@ import 'common.dart';
 import 'package:fp/fp.dart' as _;
 
 main() {
-  final d = new Dump("../app/build/web/sample_app.dart.js.info.json");
+  final d = new Dump("../dumps/dump.json");
   final g = groups(d);
   printGroups(g);
 

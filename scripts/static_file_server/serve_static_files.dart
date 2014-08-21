@@ -8,10 +8,15 @@ import 'package:http_server/http_server.dart' show VirtualDirectory;
 final HOST = "127.0.0.1";
 final PORT = 8080;
 
-main() {
+main(List<String> args) {
   HttpServer.bind(HOST, PORT).then((server){
-    var root = Platform.script.resolve('./../../app/build/web').toFilePath();
-    final vDir = new VirtualDirectory(root)
+    final path = args.first;
+
+    if (!new Directory(path).existsSync()) {
+      throw "$path does not exist";
+    }
+
+    final vDir = new VirtualDirectory(path)
       ..followLinks = true
       ..jailRoot = false;
     server.listen(vDir.serveRequest);

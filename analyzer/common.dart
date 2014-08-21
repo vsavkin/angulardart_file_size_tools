@@ -27,7 +27,7 @@ class Tracing {
 
   _readAllFuncCallFromChromeDebugFile(List<String> lines) {
     return lines
-        .where((line) => line.contains("source: http://localhost:8080/sample_app.dart.js"))
+        .where((line) => line.contains("source: http://localhost:8080") && line.contains("INFO:CONSOLE"))
         .map((line) => line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")))
         .map((line) => line.substring(line.lastIndexOf(":") + 1))
         .map((line) => line.split("."))
