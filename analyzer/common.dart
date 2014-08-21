@@ -79,7 +79,7 @@ class Dump {
     return reduceChildren(lib, [], (list, child) {
       if (child["kind"] == "class") {
         list.addAll(allFunctionsInClass(child));
-      } else {
+      } else if (includeFunc(child)) {
         list.add(new Func("", child["name"], child));
       }
       return list;
@@ -87,8 +87,15 @@ class Dump {
   }
 
   List<Func> allFunctionsInClass(Map clazz) {
-    return reduceChildren(clazz, [], (list, child) => list..add(new Func(clazz["name"], child["name"], child)));
+    return reduceChildren(clazz, [], (list, child){
+      if (includeFunc(child))
+        list.add(new Func(clazz["name"], child["name"], child));
+      return list;
+    });
   }
+
+  bool includeFunc(method) =>
+      method["kind"] == "method" && method["size"] != null && method["size"] > 0;
 
   Map groupByLibraries(fn) {
     return json["elements"]["library"].values.fold({}, (res, lib) {

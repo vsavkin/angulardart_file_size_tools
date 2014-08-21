@@ -18,7 +18,7 @@ Run `./scripts/dumpinfo.sh` to generate:
 
 
 
-## Dump Info + Tracing
+## Tracing
 
 To enable tracing:
 * Open `dart-sdk/lib/_internal/compiler/implementation/js_backend/backend.dart`
@@ -34,7 +34,7 @@ Run ./scripts/tracing.sh to generate:
 
 You can analyze `dumps/dump.json` using http://dart-lang.github.io/dump-info-visualizer/build/web/viewer.html
 
-The analyzer directory contains a bunch of Dart scripts that run some analysis using  `dumps/dump.json` and `chrome_logs/chrome_debug.log`. Run `tracing.sh` before running the scripts.
+The analyzer directory contains a bunch of Dart scripts that run some analysis using  `dumps/dump.json` and `chrome_logs/chrome_debug.log`. Run `dumpinfo.sh` and `tracing.sh` before running the scripts.
 
 
 
@@ -43,53 +43,51 @@ The analyzer directory contains a bunch of Dart scripts that run some analysis u
 `size_by_library_group.dart`  generates:
 
 ```
------ libs grouped by category --------------------------
-Group       Libs   Bytes     %      Dead      Dead %
----------------------------------------------------------
-totals      155    835175    (100%) 584248    (70%)
-other       61     239019    (29%)  174737    (73%)
-angular     38     214686    (26%)  138431    (64%)
-dart        18     184043    (22%)  127880    (69%)
-di          33     143817    (17%)  131814    (92%)
-generated   3      40632     (5%)   0         (0%)
-route       2      12978     (2%)   11386     (88%)
+----- libs grouped by category --------------------------------------------
+Group       Libs   Funcs     Bytes  %      Dead Func %      Dead Bytes %
+---------------------------------------------------------------------------
+totals      89     2591      546835 (100%) 2259      (87%)  278199     (51%)
+angular     38     893       208429 (38%)  805       (90%)  110031     (53%)
+dart        17     1201      176844 (32%)  1047      (87%)  111363     (63%)
+other       17     363       95980  (18%)  291       (80%)  36688      (38%)
+generated   3      0         33295  (6%)   0         (100%) 0          (0%)
+di          11     87        20936  (4%)   69        (79%)  11260      (54%)
+route       2      47        10844  (2%)   47        (100%) 8857       (82%)
+app         1      0         507    (0%)   0         (100%) 0          (0%)
 
 
----------------------- libs angular ---------------------------------------
-Lib                                     Size      %           Dead Size   Dead %
-------------------------------------------------------------------------------
-totals                                  214686    100 (26%)   138431      (64%)
-angular.core.dom_internal               56221     26 (7%)     29176       (52%)
-angular.directive                       42382     20 (5%)     30452       (72%)
-angular.core_internal                   16273     8 (2%)      6888        (42%)
-angular.watch_group                     11554     5 (1%)      7534        (65%)
-angular.animate                         9667      5 (1%)      7863        (81%)
-angular.node_injector                   9161      4 (1%)      2017        (22%)
-angular.formatter_internal              8819      4 (1%)      7057        (80%)
-angular.introspection                   8446      4 (1%)      4874        (58%)
-angular.core.parser.dynamic_parser_impl 7639      4 (1%)      7565        (99%)
-angular.routing                         5952      3 (1%)      3774        (63%)
-angular.change_detection.ast_parser     5823      3 (1%)      5535        (95%)
-angular.core.parser.lexer               4456      2 (1%)      4125        (93%)
-angular.util                            4000      2 (1%)      3652        (91%)
-angular.core.parser.syntax              2920      1 (0%)      2421        (83%)
-angular.core.parser.eval                2604      1 (0%)      2270        (87%)
-angular.core.parser.dynamic_parser      2328      1 (0%)      2083        (89%)
+---------------------- libs angular -------------------------------------------------------------------
+Lib                                     Funcs      Bytes      %           Dead Funcs %      Dead Bytes %
+--------------------------------------------------------------------------------------------------------
+totals                                  893        208429     100 (38%)   805        (90%)  110031     (53%)
+angular.core.dom_internal               181        53697      26 (10%)    149        (82%)  24578      (46%)
+angular.directive                       204        41795      20 (8%)     204        (100%) 23890      (57%)
+angular.core_internal                   82         15904      8 (3%)      50         (61%)  5828       (37%)
+angular.watch_group                     58         11453      5 (2%)      53         (91%)  6448       (56%)
+angular.animate                         39         9179       4 (2%)      39         (100%) 7357       (80%)
+angular.node_injector                   20         9171       4 (2%)      8          (40%)  1842       (20%)
+angular.introspection                   6          8448       4 (2%)      6          (100%) 2054       (24%)
+angular.formatter_internal              25         8412       4 (2%)      25         (100%) 6455       (77%)
+angular.core.parser.dynamic_parser_impl 25         7635       4 (2%)      25         (100%) 7548       (99%)
+angular.change_detection.ast_parser     23         5729       3 (1%)      23         (100%) 3212       (56%)
+angular.routing                         14         4523       2 (1%)      14         (100%) 1982       (44%)
+angular.core.parser.lexer               35         4431       2 (1%)      35         (100%) 4063       (92%)
+angular.util                            0          3999       2 (1%)      0          (100%) 0          (0%)
 
 
----------------------- libs dart ---------------------------------------
-Lib                                     Size      %           Dead Size   Dead %
-------------------------------------------------------------------------------
-totals                                  184043    100 (22%)   127880      (69%)
-dart.dom.html                           47897     26 (6%)     34270       (72%)
-dart.async                              36983     20 (4%)     24171       (65%)
-dart.collection                         28860     16 (4%)     18415       (64%)
-dart.core                               25957     14 (3%)     21809       (84%)
-dart.convert                            14320     8 (2%)      12853       (90%)
-dart._internal                          12959     7 (2%)      7881        (61%)
-dart.dom.svg                            5435      3 (1%)      2727        (50%)
-dart.js                                 5016      3 (1%)      2149        (43%)
-dart.typed_data.implementation          4969      3 (1%)      2841        (57%)
+---------------------- libs dart -------------------------------------------------------------------------
+Lib                                     Funcs      Bytes      %           Dead Funcs %      Dead Bytes %
+----------------------------------------------------------------------------------------------------------
+totals                                  1201       176844     100 (32%)   1047       (87%)  111363     (63%)
+dart.dom.html                           441        45311      26 (8%)     411        (93%)  28132      (62%)
+dart.async                              199        36124      20 (6%)     164        (82%)  20232      (56%)
+dart.collection                         200        27126      15 (5%)     135        (68%)  16502      (61%)
+dart.core                               109        25837      15 (5%)     100        (92%)  20433      (79%)
+dart.convert                            72         14093      8 (3%)      72         (100%) 11971      (85%)
+dart._internal                          92         12583      7 (2%)      80         (87%)  7367       (59%)
+dart.js                                 18         5029       3 (1%)      15         (83%)  1931       (38%)
+dart.dom.svg                            42         4787       3 (1%)      42         (100%) 2320       (48%)
+dart.typed_data.implementation          28         4508       3 (1%)      28         (100%) 2475       (55%)
 ```
 
 
@@ -119,12 +117,13 @@ all         dead        %g
 
 ## Changing App
 
-You can profile any app, not just "sample_app". To do that set the APP_DIR and FILE env variables.
+You can run scripts for any app, not just for "sample_app". To do that set the APP_DIR and FILE env variables.
 
 ```
-APP_DIR=/myapp FILE=main_file.dart ./scripts/tracing.sh
 APP_DIR=/myapp FILE=main_file.dart ./scripts/dumpinfo.sh
+APP_DIR=/myapp FILE=main_file.dart ./scripts/tracing.sh
 ```
+
 
 You don't have to change any of the dart scripts.
 

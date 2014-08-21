@@ -1,3 +1,5 @@
+echo Record APP_DIR=$APP_DIR
+
 rm -rf chrome_logs
 
 dart scripts/static_file_server/serve_static_files.dart "$APP_DIR/build/web" &
