@@ -40,8 +40,9 @@ import 'common.dart';
 import 'package:fp/fp.dart' as _;
 
 main() {
+  final t = new Tracing("../chrome_logs/chrome_debug.log");
   final d = new Dump("../dumps/dump.json");
-  final g = groups(d);
+  final g = groups(d, t);
   printGroups(g);
 
   printLibs(libsInGroup(g["groups"], "angular"));
@@ -51,18 +52,19 @@ main() {
 void printGroups(Map info) {
   final totals = info["totals"];
   final groups = info["groups"];
-  pr(val) => printRow([val["group"], val["libsLength"], val["size"], "(${val["percent"]}%)"],  [12, 7, 10, 7]);
+  pr(val) => printRow([val["group"], val["libsLength"], val["size"], "(${val["percent"]}%)",
+    val["deadSize"], "(${percent(val["deadSize"], val["size"])}%)"],  [12, 7, 10, 7, 10, 7]);
 
-  print("----- libs grouped by category ------");
-  printRow(["Group", "Libs", "Bytes", "%"],  [12, 7, 10, 7]);
-  print('--------------------------------------');
+  print("----- libs grouped by category --------------------------");
+  printRow(["Group", "Libs", "Bytes", "%", "Dead", "Dead %"],  [12, 7, 10, 7, 10, 7]);
+  print('---------------------------------------------------------');
   pr(totals);
   groups.forEach(pr);
 
   // Other mostly consists of _js_helper, _isolate_helper, _interceptors, so it cannot be made smaller.
 }
 
-Map groups(Dump a) {
+Map groups(Dump a, Tracing t) {
   final grouped = a.groupByLibraries((lib) {
     final angularLibs = [
         'angular', 'change_detection'
@@ -76,18 +78,28 @@ Map groups(Dump a) {
     return "other";
   });
 
+  addDeadCode(libs) =>
+      libs.forEach((lib) => lib.putIfAbsent("dead", () => t.deadCodeInLibrary(a, lib)));
+
+  reduceDeadCode(libs) =>
+      libs.fold(0, (m, c) => m + c["dead"]["deadSize"]);
+
+  grouped.values.forEach((libs) => addDeadCode(libs));
+
   final res = grouped.keys.fold([], (res, key) =>
     res..add({
         "group" : key,
         "size" : a.reduceSize(grouped[key]),
         "libs" : grouped[key],
+        "deadSize" : reduceDeadCode(grouped[key]),
         "libsLength" : grouped[key].length
     }));
   res.sort((a, b) => b["size"] - a["size"]);
 
-  final totals = res.fold({"group" : "totals", "libsLength" : 0, "size" : 0, "percent" : 100}, (res, curr) {
+  final totals = res.fold({"group" : "totals", "libsLength" : 0, "size" : 0, "percent" : 100, "deadSize" : 0}, (res, curr) {
     res["libsLength"] += curr["libsLength"];
     res["size"] += curr["size"];
+    res["deadSize"] += curr["deadSize"];
     return res;
   });
 
@@ -102,12 +114,13 @@ Map groups(Dump a) {
 void printLibs(Map info) {
   final totals = info["totals"];
   final libs = info["libs"];
-  pr(val) => printRow([val["name"], val["size"], "${val["percent"]} (${val["normalizedPercent"]}%)"],  [40, 10, 12]);
+  pr(val) => printRow([val["name"], val["size"], "${val["percent"]} (${val["normalizedPercent"]}%)",
+      val["deadSize"], "(${percent(val["deadSize"], val["size"])}%)"],  [40, 10, 12, 12, 7]);
 
   print("");
-  print("---------------------- libs ${info["group"]} -------------------------");
-  printRow(["Lib", "Size", "%"],  [40, 10, 12]);
-  print('----------------------------------------------------------');
+  print("---------------------- libs ${info["group"]} ---------------------------------------");
+  printRow(["Lib", "Size", "%", "Dead Size", "Dead %"],  [40, 10, 12, 12, 7]);
+  print('------------------------------------------------------------------------------');
   pr(totals);
   libs.forEach(pr);
 }
@@ -118,12 +131,14 @@ Map libsInGroup(List groups, String groupKey) {
 
   libs.sort((a, b) => b["size"] - a["size"]);
 
-  final totals = {"name" : "totals", "size" : group["size"], "percent" : "100", "normalizedPercent" : group["percent"]};
+  final totals = {"name" : "totals", "size" : group["size"],
+      "percent" : "100", "normalizedPercent" : group["percent"], "deadSize" : group["deadSize"]};
 
   libs.forEach((res){
     final p = ((res["size"] / totals["size"]) * 100).round();
     res["percent"] = p;
     res["normalizedPercent"] = (p * (group["percent"] / 100)).round();
+    res["deadSize"] = res["dead"]["deadSize"];
   });
 
   return {"libs" : libs, "totals" : totals, "group" : groupKey};

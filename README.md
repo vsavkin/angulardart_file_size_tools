@@ -43,51 +43,53 @@ The analyzer directory contains a bunch of Dart scripts that run some analysis u
 `size_by_library_group.dart`  generates:
 
 ```
------ libs grouped by category ------
-Group       Libs   Bytes     %
---------------------------------------
-totals      89     546835    (100%)
-angular     38     208429    (38%)
-dart        17     176844    (32%)
-other       17     95980     (18%)
-generated   3      33295     (6%)
-di          11     20936     (4%)
-route       2      10844     (2%)
-app         1      507       (0%)
-
----------------------- libs angular -------------------------
-Lib                                     Size      %
-----------------------------------------------------------
-totals                                  208429    100 (38%)
-angular.core.dom_internal               53697     26 (10%)
-angular.directive                       41795     20 (8%)
-angular.core_internal                   15904     8 (3%)
-angular.watch_group                     11453     5 (2%)
-angular.animate                         9179      4 (2%)
-angular.node_injector                   9171      4 (2%)
-angular.introspection                   8448      4 (2%)
-angular.formatter_internal              8412      4 (2%)
-angular.core.parser.dynamic_parser_impl 7635      4 (2%)
-angular.change_detection.ast_parser     5729      3 (1%)
-angular.routing                         4523      2 (1%)
-angular.core.parser.lexer               4431      2 (1%)
-angular.util                            3999      2 (1%)
+----- libs grouped by category --------------------------
+Group       Libs   Bytes     %      Dead      Dead %
+---------------------------------------------------------
+totals      155    835175    (100%) 584248    (70%)
+other       61     239019    (29%)  174737    (73%)
+angular     38     214686    (26%)  138431    (64%)
+dart        18     184043    (22%)  127880    (69%)
+di          33     143817    (17%)  131814    (92%)
+generated   3      40632     (5%)   0         (0%)
+route       2      12978     (2%)   11386     (88%)
 
 
----------------------- libs dart -------------------------
-Lib                                     Size      %
-----------------------------------------------------------
-totals                                  176844    100 (32%)
-dart.dom.html                           45311     26 (8%)
-dart.async                              36124     20 (6%)
-dart.collection                         27126     15 (5%)
-dart.core                               25837     15 (5%)
-dart.convert                            14093     8 (3%)
-dart._internal                          12583     7 (2%)
-dart.js                                 5029      3 (1%)
-dart.dom.svg                            4787      3 (1%)
-dart.typed_data.implementation          4508      3 (1%)
-dart.math                               646       0 (0%)
+---------------------- libs angular ---------------------------------------
+Lib                                     Size      %           Dead Size   Dead %
+------------------------------------------------------------------------------
+totals                                  214686    100 (26%)   138431      (64%)
+angular.core.dom_internal               56221     26 (7%)     29176       (52%)
+angular.directive                       42382     20 (5%)     30452       (72%)
+angular.core_internal                   16273     8 (2%)      6888        (42%)
+angular.watch_group                     11554     5 (1%)      7534        (65%)
+angular.animate                         9667      5 (1%)      7863        (81%)
+angular.node_injector                   9161      4 (1%)      2017        (22%)
+angular.formatter_internal              8819      4 (1%)      7057        (80%)
+angular.introspection                   8446      4 (1%)      4874        (58%)
+angular.core.parser.dynamic_parser_impl 7639      4 (1%)      7565        (99%)
+angular.routing                         5952      3 (1%)      3774        (63%)
+angular.change_detection.ast_parser     5823      3 (1%)      5535        (95%)
+angular.core.parser.lexer               4456      2 (1%)      4125        (93%)
+angular.util                            4000      2 (1%)      3652        (91%)
+angular.core.parser.syntax              2920      1 (0%)      2421        (83%)
+angular.core.parser.eval                2604      1 (0%)      2270        (87%)
+angular.core.parser.dynamic_parser      2328      1 (0%)      2083        (89%)
+
+
+---------------------- libs dart ---------------------------------------
+Lib                                     Size      %           Dead Size   Dead %
+------------------------------------------------------------------------------
+totals                                  184043    100 (22%)   127880      (69%)
+dart.dom.html                           47897     26 (6%)     34270       (72%)
+dart.async                              36983     20 (4%)     24171       (65%)
+dart.collection                         28860     16 (4%)     18415       (64%)
+dart.core                               25957     14 (3%)     21809       (84%)
+dart.convert                            14320     8 (2%)      12853       (90%)
+dart._internal                          12959     7 (2%)      7881        (61%)
+dart.dom.svg                            5435      3 (1%)      2727        (50%)
+dart.js                                 5016      3 (1%)      2149        (43%)
+dart.typed_data.implementation          4969      3 (1%)      2841        (57%)
 ```
 
 
@@ -111,7 +113,7 @@ all         dead        %
 5034        4467        89
 
 ----------------------- size ----------------------
-all         dead        %
+all         dead        %g
 2097229     1543402     74
 ```
 

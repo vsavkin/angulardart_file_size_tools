@@ -34,6 +34,27 @@ class Tracing {
         .where((line) => line.length == 2)
         .map((ps) => new Func(ps[0], ps[1])).toList();
   }
+
+  deadCodeInLibrary(Dump a, Map lib) {
+    final allFuncs = a.allFunctionsInLibrary(lib);
+    final allLength = allFuncs.length;
+    final allSize = a.reduceSize(allFuncs.map(_.getField("info")));
+
+    final dead = subLists(allFuncs, calls);
+    final deadLength = dead.length;
+    final deadSize = a.reduceSize(dead.map(_.getField("info")));
+
+    final percentLength = percent(deadLength, allLength);
+    final percentSize = percent(deadSize, allSize);
+
+    return {
+        "percentLength" : percentLength,
+        "percentSize" : percentSize,
+        "deadLength" : deadLength,
+        "deadSize" : deadSize,
+        "deadFuncs" : dead
+    };
+  }
 }
 
 class Dump {
@@ -122,3 +143,7 @@ List zip(List a, List b) {
 
 List subLists(List a, List b) => a.where((aa) => !b.contains(aa)).toList();
 
+percent(a, b) {
+  if (b == 0) return 100;
+  return ((a / b) * 100).round();
+}
