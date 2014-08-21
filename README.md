@@ -127,6 +127,15 @@ APP_DIR=/myapp FILE=main_file.dart ./scripts/tracing.sh
 You don't have to change any of the dart scripts.
 
 
+## Accuracy and Scaffolding
+
+Numbers are not very precise because:
+
+1. Dart2JS generates global scaffolding (about 20% for an empty AngularDart app).
+2. Dart2JS generates local scaffolding (about 11%).
+
+Because of the scaffolding we don't know how much a particular function accounts for exactly. Assuming that scaffolding is more or less the same for all functions, we can get a good estimate by multiplying the size of dead functions by 1.3.
+
 
 
 
