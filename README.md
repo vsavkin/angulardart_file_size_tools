@@ -14,7 +14,7 @@
 ## Dump Info
 
 Run `./scripts/dumpinfo.sh` to generate:
-* `app/build/web/sample_app.dart.js.info.json`
+* `dumps/dump.json`
 
 
 
@@ -25,7 +25,6 @@ To enable tracing:
 * Set `TRACE_CALLS` to true.
 
 Run ./scripts/tracing.sh to generate:
-* `app/build/web/sample_app.dart.js.info.json`
 * `chrome_logs/chrome_debug.log`
 
 
@@ -34,7 +33,7 @@ Run ./scripts/tracing.sh to generate:
 
 You can analyze `dumps/dump.json` using http://dart-lang.github.io/dump-info-visualizer/build/web/viewer.html
 
-The analyzer directory contains a bunch of Dart scripts that run some analysis using  `dumps/dump.json` and `chrome_logs/chrome_debug.log`. Run `dumpinfo.sh` and `tracing.sh` before running the scripts.
+The analyzer directory contains a bunch of Dart scripts that run analysis using  `dumps/dump.json` and `chrome_logs/chrome_debug.log`. Run `dumpinfo.sh` and `tracing.sh` before running the scripts.
 
 
 
@@ -126,10 +125,6 @@ APP_DIR=/myapp FILE=main_file.dart ./scripts/tracing.sh
 
 
 You don't have to change any of the dart scripts.
-
-## Notes
-
-* With tracing enabled the file size will increase significantly. If you want to be precise about the size, disable tracing and use `dumpinfo.sh`.
 
 
 
