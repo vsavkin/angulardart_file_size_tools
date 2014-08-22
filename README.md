@@ -16,6 +16,7 @@
 Run `./scripts/dumpinfo.sh` to generate:
 * `dumps/dump.json`
 
+This file will contain detailed information about everything in the generated js file: libraries, classes, fields, their size, types, etc.
 
 
 ## Tracing
@@ -27,6 +28,7 @@ To enable tracing:
 Run ./scripts/tracing.sh to generate:
 * `chrome_logs/chrome_debug.log`
 
+When TRACE_CALLS is set to true, the dart2js compiler adds special tracing calls outputting information about all function calls into the console.
 
 
 ## Analyzing the Results
@@ -39,7 +41,7 @@ The analyzer directory contains a bunch of Dart scripts that run analysis using 
 
 ## Scripts
 
-`size_by_library_group.dart`  generates:
+Run `main.dart` to generate:
 
 ```
 ----- libs grouped by category --------------------------------------------
@@ -90,51 +92,25 @@ dart.typed_data.implementation          28         4508       3 (1%)      28    
 ```
 
 
+## Other Apps
 
-`scaffolding.dart` generates:
-
-```
------------------------ scaffolding -----------------------
-file           libs' size     scaffolding    %
------------------------------------------------------------
-789508         546835         61035          11
-```
-
-
-
-`dead_code.dart` generates:
+You can run all the scripts for any app. To do that set the APP_DIR and FILE env variables.
 
 ```
----------------- number of methods ----------------
-all         dead        %
-5034        4467        89
-
------------------------ size ----------------------
-all         dead        %g
-2097229     1543402     74
+APP_DIR=/path/myapp FILE=main_file.dart ./scripts/dumpinfo.sh
+APP_DIR=/path/myapp FILE=main_file.dart ./scripts/tracing.sh
 ```
-
-## Changing App
-
-You can run scripts for any app, not just for "sample_app". To do that set the APP_DIR and FILE env variables.
-
-```
-APP_DIR=/myapp FILE=main_file.dart ./scripts/dumpinfo.sh
-APP_DIR=/myapp FILE=main_file.dart ./scripts/tracing.sh
-```
-
 
 You don't have to change any of the dart scripts.
 
 
 ## Accuracy and Scaffolding
 
-Numbers are not very precise because:
-
 1. Dart2JS generates global scaffolding (about 20% for an empty AngularDart app).
 2. Dart2JS generates local scaffolding (about 11%).
+3. We don't know what fields are being used.
 
-Because of the scaffolding we don't know how much a particular function accounts for exactly. Assuming that scaffolding is more or less the same for all functions, we can get a good estimate by multiplying the size of dead functions by 1.3.
+Considering all of these we don't know exactly how much a particular function accounts for. It is just an estimate.
 
 
 

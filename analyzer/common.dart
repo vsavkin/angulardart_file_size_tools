@@ -50,8 +50,8 @@ class Tracing {
     return {
         "percentLength" : percentLength,
         "percentSize" : percentSize,
-        "deadLength" : deadLength,
-        "deadSize" : deadSize,
+        "numberOfFuncs" : deadLength,
+        "size" : deadSize,
         "deadFuncs" : dead
     };
   }
@@ -68,6 +68,8 @@ class Dump {
   List<Func> get allFunctionsInDump =>
       reduceLibraries([], (list, lib) => list..addAll(allFunctionsInLibrary(lib)));
 
+  num get fileSize => json["outputUnits"].first["size"];
+
   /**
    * Execute call back for every library.
    */
@@ -76,26 +78,31 @@ class Dump {
   }
 
   List<Func> allFunctionsInLibrary(Map lib) {
-    return reduceChildren(lib, [], (list, child) {
-      if (child["kind"] == "class") {
-        list.addAll(allFunctionsInClass(child));
-      } else if (includeFunc(child)) {
-        list.add(new Func("", child["name"], child));
-      }
-      return list;
-    });
+    return allInLibrary(lib, includeFunc)
+      .map((data) => new Func(data["parent"] == null ? "" : data['parent']["name"], data["node"]["name"], data["node"]));
   }
 
-  List<Func> allFunctionsInClass(Map clazz) {
-    return reduceChildren(clazz, [], (list, child){
-      if (includeFunc(child))
-        list.add(new Func(clazz["name"], child["name"], child));
-      return list;
-    });
+  List allInLibrary(Map lib, Function predicate) {
+    final r = [];
+    flatten(lib, null, r, predicate);
+    return r;
+  }
+
+  void flatten(node, parent, list, predicate) {
+    if (node is String) {
+      flatten(byId(node), parent, list, predicate);
+    } else if (node is Iterable) {
+      node.forEach((n) => flatten(n, parent, list, predicate));
+    } else {
+      if (node["children"] != null) {
+        flatten(node["children"], node, list, predicate);
+      }
+      if (predicate(node)) list.add({"node": node, "parent" : parent});;
+    }
   }
 
   bool includeFunc(method) =>
-      method["kind"] == "method" && method["size"] != null && method["size"] > 0;
+      (method["kind"] == "method" || method["kind"] == "function" || method["kind"] == "constructor") && method["size"] != null && method["size"] > 0;
 
   Map groupByLibraries(fn) {
     return json["elements"]["library"].values.fold({}, (res, lib) {
@@ -110,11 +117,12 @@ class Dump {
   }
 
   reduceChildren(Map lib, init, fn) {
-    findChild(id) {
-      final parts = id.split("/");
-      return json["elements"][parts[0]][parts[1]];
-    }
-    return lib["children"].map(findChild).fold(init, fn);
+    return lib["children"].map(byId).fold(init, fn);
+  }
+
+  Map byId(id) {
+    final parts = id.split("/");
+    return json["elements"][parts[0]][parts[1]];
   }
 
   size(Map obj) => obj["size"] == null ? 0 : obj["size"];
@@ -128,7 +136,9 @@ class Dump {
   num reduceSize(obj) => obj.fold(0, (sum, obj) => sum + size(obj));
 }
 
-void printRow(List values, List sizes) {
+rowOutput(List sizes) => (List values) => printRow(values, sizes);
+
+printRow(List values, List sizes) {
   final s = zip(values, sizes)
       .map((pair) =>pair[0].toString().padRight(pair[1], " "))
       .join("");
