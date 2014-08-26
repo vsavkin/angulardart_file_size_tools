@@ -1,7 +1,6 @@
 packages
 pubspec.lock
 chrome_logs
-.idea
 app/build
 dumps
 tmp
