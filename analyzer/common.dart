@@ -9,8 +9,9 @@ class Func {
   final String methodName;
   String libraryName;
   final Map info; // all the data about the function we get from dump info
+  final Map parentInfo;
 
-  Func(this.className, this.methodName, [this.info]);
+  Func(this.className, this.methodName, [this.info, this.parentInfo]);
 
   operator == (Func func) =>
       className == func.className && methodName == func.methodName;
@@ -41,7 +42,7 @@ class Tracing {
     final allLength = allFuncs.length;
     final allSize = a.reduceSize(allFuncs.map(_.getField("info")));
 
-    final dead = subLists(allFuncs, calls);
+    final dead = deadCode(allFuncs, calls);
     final deadLength = dead.length;
     final deadSize = a.reduceSize(dead.map(_.getField("info")));
 
@@ -84,7 +85,10 @@ class Dump {
 
   List<Func> allFunctionsInLibrary(Map lib) {
     return allInLibrary(lib, includeFunc)
-      .map((data) => new Func(data["parent"] == null ? "" : data['parent']["name"], data["node"]["name"], data["node"]))
+      .map((data) {
+        final className = (data["parent"] == null || data["parent"]["kind"] != "class") ? "" : data["parent"]["name"];
+        return new Func(className, data["node"]["name"], data["node"], data["parent"]);
+      })
       .map((func) => func..libraryName = lib["name"]);
   }
 
@@ -100,6 +104,7 @@ class Dump {
     } else if (node is Iterable) {
       node.forEach((n) => flatten(n, parent, list, predicate));
     } else {
+      node["parent"] = parent;
       if (node["children"] != null) {
         flatten(node["children"], node, list, predicate);
       }
@@ -110,13 +115,7 @@ class Dump {
   bool includeFunc(method) =>
       (method["kind"] == "method" || method["kind"] == "function" || method["kind"] == "constructor") && method["size"] != null && method["size"] > 0;
 
-  Map groupByLibraries(fn) {
-    return json["elements"]["library"].values.fold({}, (res, lib) {
-      final libs = res.putIfAbsent(fn(lib), () => []);
-      libs.add(lib);
-      return res;
-    });
-  }
+  Map groupByLibraries(fn) => _.groupBy(json["elements"]["library"].values, fn);
 
   reduceLibraries(init, fn) {
     return json["elements"]["library"].values.fold(init, fn);
@@ -145,26 +144,27 @@ class Dump {
 rowOutput(List sizes) => (List values) => printRow(values, sizes);
 
 printRow(List values, List sizes) {
-  final s = zip(values, sizes)
+  final s = _.zip(values, sizes)
       .map((pair) =>pair[0].toString().padRight(pair[1], " "))
       .join("");
   print(s);
 }
 
-List zip(List a, List b) {
-  if (a.length != b.length) throw "not equal size";
-
-  final res = [];
-  for(var i = 0; i < a.length; ++i) {
-    final aa = a[i];
-    final bb = b[i];
-    res.add([aa, bb]);
-  }
-
-  return res;
-}
 
 List subLists(List a, List b) => a.where((aa) => !b.contains(aa)).toList();
+
+List deadCode(List allFuncs, List calledFuncs) {
+  var res = subLists(allFuncs, calledFuncs);
+  return res.where((fn) {
+    if (fn.parentInfo["kind"] == "class" || fn.parentInfo["kind"] == "library") return true;
+    if (fn.parentInfo["kind"] == "field") return false; //we cannot trace fields, so we assume that all fields are used.
+    if (fn.parentInfo["kind"] == "method" || fn.parentInfo["kind"] == "function") {
+      final grandparent = fn.parentInfo["parent"];
+      return res.contains(new Func(grandparent["name"], fn.parentInfo["name"]));
+    }
+    return true;
+  }).toList();
+}
 
 percent(a, b) {
   if (b == 0) return 100;
