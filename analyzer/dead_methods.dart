@@ -25,10 +25,12 @@ main(List<String> args) {
 
 printRows(List headers, List<List> rows){
   return (printer) {
-    printer(headers.join(","));
-    rows.forEach((row) => printer(row.join(",")));
+    printer(headers.map(quotes).join(","));
+    rows.forEach((row) => printer(row.map(quotes).join(",")));
   };
 }
+
+quotes(s) => '"$s"';
 
 List createRow(Func func) {
   return [func.libraryName, func.className, func.methodName];
