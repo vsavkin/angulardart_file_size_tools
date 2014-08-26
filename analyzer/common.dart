@@ -78,6 +78,10 @@ class Dump {
     json["elements"]["library"].values.forEach(fn);
   }
 
+  library(name) {
+    return json["elements"]["library"].values.firstWhere((lib) => lib["name"] == name);
+  }
+
   List<Func> allFunctionsInLibrary(Map lib) {
     return allInLibrary(lib, includeFunc)
       .map((data) => new Func(data["parent"] == null ? "" : data['parent']["name"], data["node"]["name"], data["node"]))
