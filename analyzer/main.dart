@@ -205,7 +205,7 @@ Map libsInGroup(Dump a, List groups, String groupKey) {
       "percentage" : "100", "normalizedPercentage" : group["percentage"],
 
       "size" : group["size"], "deadSize" : group["deadSize"],
-      "percentageOfDeadCode" : percent(group["size"], group["deadSize"]),
+      "percentageOfDeadCode" : percent(group["deadSize"], group["size"]),
 
       "numberOfFuncs" : group["numberOfFuncs"], "numberOfDeadFuncs" : group["numberOfDeadFuncs"],
       "percentageOfDeadFuncs" : percent(group["numberOfDeadFuncs"], group["numberOfFuncs"])};
