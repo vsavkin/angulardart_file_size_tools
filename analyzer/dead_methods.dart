@@ -8,7 +8,7 @@ main(List<String> args) {
   final t = new Tracing("../chrome_logs/chrome_debug.log");
   final d = new Dump("../dumps/dump.json");
 
-  final deadMethods = subLists(d.allFunctionsInDump, t.calls);
+  final deadMethods = deadCode(d.allFunctionsInDump, t.calls);
   final rows = deadMethods.map(createRow);
 
   final p = printRows(["Lib", "Class", "Func"], rows);
