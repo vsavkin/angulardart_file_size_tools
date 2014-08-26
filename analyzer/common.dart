@@ -7,6 +7,7 @@ import 'package:fp/fp.dart' as _;
 class Func {
   final String className;
   final String methodName;
+  String libraryName;
   final Map info; // all the data about the function we get from dump info
 
   Func(this.className, this.methodName, [this.info]);
@@ -79,7 +80,8 @@ class Dump {
 
   List<Func> allFunctionsInLibrary(Map lib) {
     return allInLibrary(lib, includeFunc)
-      .map((data) => new Func(data["parent"] == null ? "" : data['parent']["name"], data["node"]["name"], data["node"]));
+      .map((data) => new Func(data["parent"] == null ? "" : data['parent']["name"], data["node"]["name"], data["node"]))
+      .map((func) => func..libraryName = lib["name"]);
   }
 
   List allInLibrary(Map lib, Function predicate) {
